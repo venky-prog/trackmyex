@@ -1,41 +1,37 @@
-import React from 'react';
-import Gradient from '@/assets/icons/Gradient';
-import Logo from '@/assets/icons/Logo';
-import { Box } from '@/components/ui/box';
-import { Text } from '@/components/ui/text';
+import { Text, View } from "@/components/Themed";
+import { Center } from "@/components/ui/center/index.web";
+import Logo from "../assets/icons/Logo";
+import { VStack } from "@/components/ui/vstack";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Link } from "expo-router";
 
-import { Button, ButtonText } from '@/components/ui/button';
-import { useRouter } from 'expo-router';
-
-export default function Home() {
-  const router = useRouter();
+export default function Homepage() {
   return (
-    <Box className="flex-1 bg-background-300 h-[100vh]">
-        <Box className="absolute h-[500px] w-[500px] lg:w-[700px] lg:h-[700px]">
-          <Gradient />
-        </Box>
-        <Box className="flex flex-1 items-center mx-5 lg:my-24 lg:mx-32 py-safe">
-          <Box className="gap-10 base:flex-col sm:flex-row justify-between sm:w-[80%] md:flex-1">
-            <Box className="bg-background-template py-2 px-6 rounded-full items-center flex-column md:flex-row md:self-start">
-              <Text className="text-white font-medium">
-                Get started by editing
-              </Text>
-              <Text className="text-white font-medium ml-2">./App.tsx or ./app/index.tsx (or whatever entry point you have)</Text>
-            </Box>
-            <Button
-              size="md"
-              className="bg-primary-500 px-6 py-2 rounded-full"
-              onPress={() => {
-                router.push('/tabs/tab1');
-              }}
-            >
-              <ButtonText>Explore Tab Navigation</ButtonText>
+    <Center className="flex-1 justify-center p-4 px-4">
+      <VStack className="flex-1 w-full justify-center items-center" space="4xl">
+        <View className="items-center">
+          <Logo width={100} height={100} />
+          <Text className="mt-2 text-2xl font-bold">TrackmyEx</Text>
+        </View>
+        <VStack className=" my-10 w-full px-4" space="md">
+          <Link href={"/auth/login"} asChild>
+            <Button>
+              <ButtonText>Login</ButtonText>
             </Button>
-          </Box>
-          <Box className="flex-1 justify-center items-center h-[20px] w-[300px] lg:h-[160px] lg:w-[400px]">
-            <Logo />
-          </Box>
-        </Box>
-    </Box>
+          </Link>
+
+          <Link href={"/auth/signup"} asChild>
+            <Button variant="outline">
+              <ButtonText>Sign Up</ButtonText>
+            </Button>
+          </Link>   
+        </VStack>
+      </VStack>
+      <View className="mt-auto">
+        <Text className="mt-4 text-center text-sm text-gray-500">
+          By logging in, you agree to our Terms of Service and Privacy Policy.
+        </Text>
+      </View>
+    </Center>
   );
 }
