@@ -8,7 +8,7 @@ import {
   FieldPath,
 } from "react-hook-form";
 import { Input, InputField, IInputProps } from "../../input";
-import { FormControl, FormControlError } from "../../form-control";
+import { FormControl, FormControlError, FormControlErrorText } from "../../form-control";
 
 /**
  * Props for the ControllerInput component
@@ -54,8 +54,10 @@ function ControllerInput<
     name,
   });
 
+  console.log(fieldState.error)
+
   return (
-    <FormControl>
+    <FormControl isInvalid={!!fieldState.error}>
       <Input {...inputProps}>
         <InputField
           placeholder={placeholder}
@@ -64,7 +66,11 @@ function ControllerInput<
           onBlur={field.onBlur}
         />
       </Input>
-      <FormControlError>{fieldState.error?.message}</FormControlError>
+      <FormControlError>
+        <FormControlErrorText>
+          {fieldState.error?.message}
+        </FormControlErrorText>
+      </FormControlError>
     </FormControl>
   );
 }
