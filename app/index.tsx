@@ -3,9 +3,19 @@ import { Center } from "@/components/ui/center/index.web";
 import Logo from "../assets/icons/Logo";
 import { VStack } from "@/components/ui/vstack";
 import { Button, ButtonText } from "@/components/ui/button";
-import { Link } from "expo-router";
+import { Link, Redirect } from "expo-router";
+import { useSession } from "@/context";
 
 export default function Homepage() {
+
+  const {isAuthenticated} = useSession();
+
+  if(isAuthenticated) {
+    return(
+      <Redirect href="/(app)/(tabs)/scanner" />
+    ) 
+  }
+
   return (
     <Center className="flex-1 justify-center p-4 px-4">
       <VStack className="flex-1 w-full justify-center items-center" space="4xl">
@@ -14,13 +24,13 @@ export default function Homepage() {
           <Text className="mt-2 text-2xl font-bold">TrackmyEx</Text>
         </View>
         <VStack className=" my-10 w-full px-4" space="md">
-          <Link href={"/auth/login"} asChild>
+          <Link href={"/(auth)"} asChild>
             <Button>
               <ButtonText>Login</ButtonText>
             </Button>
           </Link>
 
-          <Link href={"/auth/signup"} asChild>
+          <Link href={"/(auth)/signup"} asChild>
             <Button variant="outline">
               <ButtonText>Sign Up</ButtonText>
             </Button>

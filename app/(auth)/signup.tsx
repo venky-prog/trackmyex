@@ -2,16 +2,11 @@ import { Text, View } from "@/components/Themed";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
 import { ControllerInput } from "@/components/ui/controller/input";
-import { FormControl } from "@/components/ui/form-control";
 import { Heading } from "@/components/ui/heading/index.web";
-import { Input, InputField } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
 import { useMutation } from "@apollo/client/react";
 import { Link } from "expo-router";
 import { useForm } from "react-hook-form";
-import { CreateUserDocument, CreateUserInput, CreateUserMutation } from "@/generated/graphql";
-import { Alert, AlertIcon, AlertText } from "@/components/ui/alert";
-import { InfoIcon } from "@/components/ui/icon";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DATE_REGEX, dateErrorMessage } from "@/utils/constants";
@@ -21,6 +16,7 @@ import {
   ToastTitle,
   useToast,
 } from "@/components/ui/toast";
+import { CreateUserDocument } from "@/schemas/create-user.generated";
 
 const userSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -39,14 +35,10 @@ const userSchema = Yup.object({
 
 function Signup() {
   const toast = useToast();
-  const [createUser, { loading, data, error: mutationError }] =
+  const [createUser, { loading, error: mutationError }] =
     useMutation(CreateUserDocument);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       email: "",
       firstName: "",
@@ -58,23 +50,35 @@ function Signup() {
     resolver: yupResolver(userSchema),
   });
 
-  console.log(errors);
-
   const onSubmit = (input: any) => {
     try {
       createUser({
         variables: {
-          firstName: input.firstName,
-          lastName: input.lastName,
-          email: input.email,
-          password: input.password,
-          dob: input.dob
-        }
+          input: {
+            dob: input.dob,
+            email: input.email,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            password: input.password,
+          },
+        },
       });
-      console.log(data, mutationError);
       if (mutationError) {
         throw new Error(mutationError.message);
       }
+      reset();
+      toast.show({
+        id: "signup-success",
+        placement: "top",
+        render: ({ id }) => (
+          <Toast nativeID={id} className="w-full" variant="outline">
+            <ToastTitle className="color-success-400" bold>
+              Account created!
+            </ToastTitle>
+            <ToastDescription>Can't wait to see you onboard.</ToastDescription>
+          </Toast>
+        ),
+      });
     } catch (error) {
       console.log(error);
       toast.show({
@@ -134,14 +138,11 @@ function Signup() {
             placeholder="Confirm your password"
           />
 
-          <Button
-            onPress={handleSubmit(onSubmit, (errors) => console.log(errors))}
-            disabled={loading}
-          >
+          <Button onPress={handleSubmit(onSubmit)} disabled={loading}>
             <ButtonText>Sign Up</ButtonText>
           </Button>
           <Button variant="link">
-            <Link href={"/auth/login"} asChild>
+            <Link href={"/(auth)"} asChild>
               <ButtonText>Sign In</ButtonText>
             </Link>
           </Button>
