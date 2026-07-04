@@ -11,7 +11,7 @@ echo "Deploying to nginx"
 
 pnpm codegen
 
-pnpm build
+pnpm build:web
 
 
 rsync -avz \
