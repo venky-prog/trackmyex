@@ -17,4 +17,4 @@ pnpm build
 rsync -avz \
       -e "ssh -i ~/.ssh/id_rsa" \
       "./dist/" \
-      "$SERVER_USER@$SERVER_HOST:$APPS_PATH/"
+      "$SERVER_USER@$SERVER_HOST:$APP_PATH/"
