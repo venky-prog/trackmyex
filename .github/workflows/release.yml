@@ -1,0 +1,23 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup node and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+
+      - name: Release app
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SERVER_HOST: ${{ vars.SERVER_HOST }}
+          SERVER_USER: ${{ vars.SERVER_USER }}
+          APPS_PATH: ${{ vars.APPS_PATH }}
+          HIVE_API_KEY: ${{ secrets.HIVE_API_KEY }}
+        run: bash ./scripts/release-app.sh
